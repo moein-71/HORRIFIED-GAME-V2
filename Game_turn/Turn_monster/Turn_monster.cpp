@@ -59,3 +59,11 @@ void Turn_monster::handle_turn(Game& gamestage) {
 
     gamestage.turn = gamestage.hero_turn ;
 }
+
+void Turn_monster::set_which_turn(int which_turn) {
+    this -> which_turn = which_turn ;
+}
+
+int Turn_monster::get_which_turn() {
+    return this -> which_turn ;
+}
