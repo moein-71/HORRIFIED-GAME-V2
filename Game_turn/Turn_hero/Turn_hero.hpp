@@ -15,8 +15,11 @@ class Turn_hero : public Game_turn {
 
         bool phase(Game& gamestage) override ;
         void handle_turn(Game& gamestage) override ;
-
+        void set_remain_actions(int remain_actions) ;
+        int get_remain_actions() ;
     private :
+
+        int remain_actions ;
 };
 
 #endif //TURN_HERO_HPP

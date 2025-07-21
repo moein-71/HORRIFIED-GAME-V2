@@ -12,7 +12,7 @@ bool Turn_hero::phase(Game& gamestage) {
     gamestage.turn->handle_turn(gamestage) ;
     shared_ptr<Hero_Action> action = nullptr ;
     
-    int remain_actions = gamestage.player_turn->get_Player_Hero()->get_action()  + gamestage.get_added_action() ;
+    remain_actions = gamestage.player_turn->get_Player_Hero()->get_action()  + gamestage.get_added_action() ;
 
     char choose = 0 ;
 
@@ -112,4 +112,12 @@ bool Turn_hero::phase(Game& gamestage) {
 void Turn_hero::handle_turn(Game& gamestage) {
 
     gamestage.turn = gamestage.monster_turn ;
+}
+
+void Turn_hero::set_remain_actions(int remain_actions) {
+    this -> remain_actions = remain_actions ;
+}
+
+int Turn_hero::get_remain_actions() {
+    return this -> remain_actions ;
 }
