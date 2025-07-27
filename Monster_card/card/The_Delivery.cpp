@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+The_delivery::The_delivery() {
+    this -> set_name("The_Delivery") ;
+}
+
 void The_delivery::ability(Game& gamestage) {
 
     constexpr int add_item = 3 ;

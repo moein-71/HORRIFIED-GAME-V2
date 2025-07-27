@@ -7,6 +7,7 @@ class The_ichthyologist : public Monster_card {
 
     public :
 
+        The_ichthyologist() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

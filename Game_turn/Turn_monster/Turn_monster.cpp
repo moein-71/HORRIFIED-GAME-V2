@@ -16,7 +16,6 @@
 
 using namespace std ;
 
-Turn_monster::Turn_monster() : which_turn(1) {}
 
 bool Turn_monster::phase(Game& gamestage) {
 
@@ -48,22 +47,13 @@ void Turn_monster::handle_turn(Game& gamestage) {
 
     gamestage.turn = gamestage.hero_turn ;
     
-    if(which_turn == 1) {
+    if(gamestage.which_turn == 1) {
         gamestage.player_turn = &gamestage.player_2 ;
-        which_turn = 2 ;
+        gamestage.which_turn = 2 ;
     }
-    else if(which_turn == 2) {
+    else if(gamestage.which_turn == 2) {
         gamestage.player_turn = &gamestage.player_1 ;
-        which_turn = 1 ;
+        gamestage.which_turn = 1 ;
     }
-
-    gamestage.turn = gamestage.hero_turn ;
 }
 
-void Turn_monster::set_which_turn(int which_turn) {
-    this -> which_turn = which_turn ;
-}
-
-int Turn_monster::get_which_turn() {
-    return this -> which_turn ;
-}

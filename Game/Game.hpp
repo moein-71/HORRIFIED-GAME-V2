@@ -38,6 +38,7 @@ class Guide ;
 class Defeat ;
 class Advance ;
 class Program ;
+class Menu ;
 
 class Game {
 
@@ -54,6 +55,7 @@ class Game {
     friend class Turn_hero ;
     friend class Game_turn ;
     friend class Program ;
+    friend class Menu ;
 
     public :
 
@@ -63,12 +65,18 @@ class Game {
         void set_player_2(std::shared_ptr<Hero> player_2_hero) ;
         int random_number() ;
         Item get_random_item() ; 
+        Item get_item(std::string name) ;
         void set_item_bag(Item new_item) ;
         void set_item_to_map(Item new_item) ;
+        void remove_not_exist_items_in_save(std::vector<std::string> exist_items) ;
         std::shared_ptr<Perk_card> get_random_perk() ; 
+        std::shared_ptr<Perk_card> get_perk(std::string name) ;
         std::shared_ptr<Monster_card> get_random_monster_card() ;
         Villager get_villager(std::string name) ;
-        
+        void remove_not_exist_villagers_in_save(std::vector<std::string> exist_villagers) ;
+        void remove_not_exist_perk_cards_in_save(std::vector<std::string> exist_perks) ;
+        void remove_not_exist_monster_cards_in_save(std::vector<std::string> exist_monster_card) ;
+
         char throw_dice() ; 
 
         std::string find_place_with_more_item_map() ;
@@ -115,6 +123,8 @@ class Game {
     
         int Terror_level ;
         int added_action ;
+        int which_turn ; // if 1 play player to , if 2 play player 1 
+        int remain_actions ;
         Player * player_turn ;
         std::shared_ptr<Game_turn> turn = nullptr ;
         std::shared_ptr<Game_turn> hero_turn = nullptr ;

@@ -9,7 +9,7 @@
 include_directories( ../Game ../Game_turn ../Game_turn/Turn_hero ../Game_turn/Turn_monster 
 ../Monster_action ../Monster_action/Kill ../Monster_action/Move_monster ../Monster_action/Power ../Monster_card ../Monster_card/card 
 ../Perk_card ../Perk_card/card ../ACTION ../ACTION/ADVANCE ../ACTION/DEFEAT ../ACTION/GUIDE ../ACTION/MOVE_HERO ../ACTION/PICK_UP 
-../ACTION/SPECIAL_ACTION ../HERO ../ITEM ../VILLAGER ../MAP ../MONSTER ../Programm ../Player)
+../ACTION/SPECIAL_ACTION ../HERO ../ITEM ../VILLAGER ../MAP ../MONSTER ../Programm ../Player ../save)
 
 cmake_minimum_required(VERSION 3.10)
 project(Game_Project)
@@ -24,6 +24,7 @@ add_executable(app
     ../Programm/Programm.cpp
     ../Game/Game.cpp
     ../Player/Player.cpp
+    ../Programm/Menu.cpp
     
     # فایل‌های Game_turn
     ../Game_turn/Turn_hero/Turn_hero.cpp
@@ -59,6 +60,7 @@ add_executable(app
     ../ACTION/SPECIAL_ACTION/Special_Action.cpp
     
     # فایل‌های Monster_card
+    ../Monster_card/Monster_card..cpp
     ../Monster_card/card/Egyptian_Expert.cpp
     ../Monster_card/card/Form_of_The_Bat.cpp
     ../Monster_card/card/Former_Employer.cpp
@@ -107,6 +109,8 @@ target_include_directories(app PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/VILLAGER
 )
 
-# در صورت نیاز کتابخانه‌ها
 find_package(Threads REQUIRED)
 target_link_libraries(app PRIVATE Threads::Threads)
+
+find_package(raylib REQUIRED)
+target_link_libraries(app PRIVATE raylib)

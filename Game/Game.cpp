@@ -40,6 +40,7 @@ Game::Game() : player_turn(&player_1 ){
 
     this -> Terror_level = 0 ;
     this -> added_action = 0 ;
+    this -> which_turn = 1 ;
 
     this -> hero_turn = make_shared<Turn_hero>() ;
     this -> turn = hero_turn ;
@@ -223,6 +224,21 @@ Item Game::get_random_item() {
     return random_item ;
 }
 
+Item Game::get_item(string name) {
+
+    for(int i{} ; i < this->item_bag.size() ; ++i) {
+
+        if(name == item_bag[i].get_name()) {
+
+            Item return_item = this->item_bag[i] ; 
+            this->item_bag.erase(item_bag.begin() + i) ;
+            this->item_bag.shrink_to_fit() ;
+            return return_item ;
+        }
+    }
+    return Item("" , "" , "" , 0) ;
+}
+
 void Game::set_item_bag(Item new_item) {
 
     item_bag.push_back(new_item) ;
@@ -237,6 +253,25 @@ void Game::set_item_to_map(Item new_item) {
 
     this->Game_map.set_item(new_item) ;
 }
+
+void Game::remove_not_exist_items_in_save(vector<string> exist_items) {
+    vector<Item> now_items ;
+
+    for(int i{} ; i < exist_items.size() ; ++i) {
+
+        for(int j{} ; j < this->item_bag.size() ; ++j) {
+
+            if(exist_items[i] == item_bag[j].get_name()) {
+
+                now_items.push_back(item_bag[j]) ;
+                item_bag.erase(item_bag.begin() + j) ;
+            }
+        }
+    }
+
+    this->item_bag = now_items ;
+}
+
 shared_ptr<Perk_card> Game::get_random_perk() {
 
     if(perk_bag.empty()) {
@@ -254,7 +289,23 @@ shared_ptr<Perk_card> Game::get_random_perk() {
     }
 
     return random ;
-} 
+}
+
+std::shared_ptr<Perk_card> Game::get_perk(std::string name) {
+
+    for(int i{} ; i < this->perk_bag.size() ; ++i) {
+
+        if(name == this->perk_bag[i]->get_perk_name()) {
+
+            shared_ptr<Perk_card> return_card = this->perk_bag[i] ;
+            this->perk_bag.erase(this->perk_bag.begin() + i) ;
+            this->perk_bag.shrink_to_fit() ;
+            return return_card ;
+        }
+    }
+
+    return nullptr ;
+}
 
 shared_ptr<Monster_card> Game::get_random_monster_card() {
 
@@ -291,8 +342,63 @@ Villager Game::get_villager(string name) {
     }
 
     return Villager("" , "" , "") ;
-
 }
+
+void Game::remove_not_exist_villagers_in_save(std::vector<std::string> exist_villagers) {
+
+    vector<Villager> new_villagers ;
+
+    for(int i{} ; i < exist_villagers.size() ; ++i) {
+
+        for(int j{} ; j < this->villagers_bag.size() ; ++j) {
+
+            if(exist_villagers[i] == this -> villagers_bag[j].get_name()) {
+                new_villagers.push_back(villagers_bag[j]) ;
+                // this->villagers_bag.erase(this->villagers_bag.begin() + j) ;
+                // this->villagers_bag.shrink_to_fit() ;
+            }
+        }
+    }
+
+    this->villagers_bag = new_villagers ;
+}
+
+void Game::remove_not_exist_perk_cards_in_save(std::vector<std::string> exist_perks) {
+    vector<shared_ptr<Perk_card>> new_perk_cards ;
+
+    for(int i{} ; i < exist_perks.size() ; ++i) {
+
+        for(int j{} ; j < this->perk_bag.size() ; ++j) {
+
+            if(exist_perks[i] == this->perk_bag[j]->get_perk_name()) {
+                new_perk_cards.push_back(this->perk_bag[j]) ;
+                this->perk_bag.erase(this->perk_bag.begin() + j) ;
+                this->perk_bag.shrink_to_fit() ;
+            }
+        }
+    }
+
+    this->perk_bag = new_perk_cards ;
+    cout<< perk_bag.size() << "   " << exist_perks.size() <<"\n\n";
+}
+
+void Game::remove_not_exist_monster_cards_in_save(std::vector<std::string> exist_monster_card) {
+    vector<shared_ptr<Monster_card>> new_monster_cards ;
+
+    for(int i{} ; i < exist_monster_card.size() ; ++i) {
+
+        for(int j{} ; j < this->Monster_cards_bag.size() ; ++j) {
+
+            if(exist_monster_card[i] == this->Monster_cards_bag[j]->get_name()) {
+                new_monster_cards.push_back(this->Monster_cards_bag[j]) ;
+                this->Monster_cards_bag.erase(this->Monster_cards_bag.begin() + j) ;
+                this->Monster_cards_bag.shrink_to_fit() ;
+            }
+        }
+    }
+    this->Monster_cards_bag = new_monster_cards ;
+}
+
 
 char Game::throw_dice() {
 

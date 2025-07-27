@@ -7,6 +7,7 @@ class On_the_move : public Monster_card {
 
     public :
 
+        On_the_move() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

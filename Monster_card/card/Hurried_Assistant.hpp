@@ -7,6 +7,7 @@ class Hurried_assistant : public Monster_card {
 
     public :
 
+        Hurried_assistant() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

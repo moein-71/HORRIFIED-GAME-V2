@@ -7,6 +7,7 @@ class Former_employer : public Monster_card {
 
     public :
 
+        Former_employer() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

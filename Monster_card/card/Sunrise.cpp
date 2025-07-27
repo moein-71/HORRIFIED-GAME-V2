@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Sunrise::Sunrise() {
+    this -> set_name("Sunrise") ;
+}
+
 void Sunrise::ability(Game& gamestage) {
 
     constexpr int add_item = 0 ;

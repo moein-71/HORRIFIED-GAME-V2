@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Fortune_teller::Fortune_teller() {
+    this -> set_name("Fortune_Teller") ;
+}
+
 void Fortune_teller::ability(Game& gamestage) {
 
     constexpr int add_item = 3 ;

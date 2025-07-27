@@ -1,20 +1,23 @@
 #include "Game.hpp"
 #include <utility>
 
-struct Save {
+struct Game_Save {
 
-    std::string Terror_level = "6" ;
+    std::string file_name = "last_save.txt" ;
+    std::string time_save ;
 
-    std::string which_turn = "1" ; // in this we should change player_turn in game and whitch_turn in monster_turn 
+    std::string Terror_level ;
+
+    std::string which_turn ; // in this we should change player_turn in game and whitch_turn in monster_turn 
     std::string remain_actions ;
 
-    std::string dracula_place = "Crypt" ;
+    std::string dracula_place ;
     std::array<std::pair<std::string , bool> , 4> dracula_casket ;
 
-    std::string invisible_man_place = "Inn" ;
-    std::array<std::pair<std::string , bool> , 4> invisible_man_investigate ;
+    std::string invisible_man_place ;
+    std::array<std::pair<std::string , bool> , 5> invisible_man_investigate ;
 
-    std::string frenzy_monster = "Dracula" ;
+    std::string frenzy_monster ;
 
     std::string player_1_hero ;
     std::string player_1_name ;
@@ -29,7 +32,7 @@ struct Save {
     std::vector<std::string> player_2_perk_card ;
 
     std::vector<std::string> item_in_bag ;
-    std::vector<std::string> item_in_map ;
+    std::vector<std::pair<std::string , int>> item_in_map ;
 
     std::vector<std::string> villager_in_bag ;
     std::vector<std::pair<std::string , std::string>> villager_in_map ; //vilager name , villager place

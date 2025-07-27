@@ -44,6 +44,8 @@ class Hero{
         void Print_Hero_Info();
         std::string repeat(const std::string& s, int n) ;
         void printLineDelay(const std::string& line, int delayMs = 30) ; //30
+        std::vector<std::pair<std::string , int>> get_items_for_save() ;
+        std::vector<std::string> get_perk_for_save() ;
 
         
     private:

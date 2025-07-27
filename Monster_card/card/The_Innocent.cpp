@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+The_innocent::The_innocent() {
+    this -> set_name("The_Innocent") ;
+}
+
 void The_innocent::ability(Game& gamestage) {
 
     constexpr int add_item = 3 ;

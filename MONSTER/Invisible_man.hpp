@@ -18,6 +18,7 @@ class Invisible_man : public Monster {
         bool can_kill_villager(std::string);
         bool set_investigate_found(std::string);
         bool check_investigate() ;
+        std::array<std::pair<std::string , bool> , 5> get_investigate_for_save() ;
        
 
     private:

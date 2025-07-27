@@ -20,7 +20,6 @@ class Game_turn {
         virtual void handle_turn(Game& gamestage) = 0 ;
 
     private :
-
 };
 
 #endif //GAME_TURN__HPP

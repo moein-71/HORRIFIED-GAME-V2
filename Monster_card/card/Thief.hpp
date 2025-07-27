@@ -7,6 +7,7 @@ class Thief : public Monster_card {
 
     public :
 
+        Thief() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

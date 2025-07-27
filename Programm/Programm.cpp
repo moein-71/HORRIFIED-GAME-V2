@@ -4,6 +4,8 @@
 #include "Mayor.hpp"
 #include "Courier.hpp"
 #include "Scientist.hpp"
+#include "State_enum.hpp"
+#include "raylib.h"
 
 #include "Item.hpp"
 
@@ -39,134 +41,342 @@
 
 using namespace std ;
 
+Program::Program() {
+    this -> base_game = make_shared<Game>() ;
+    this -> current_screen = GAME_MENU ;
+}
+
 void Program::Start() {
 
-    // this -> showWelcomeScreen() ;
-
     for(int i{} ; i < 12 ; ++i) {
-        base_game.set_item_to_map(base_game.get_random_item()) ;
+        base_game->set_item_to_map(base_game->get_random_item()) ;
+    }
+
+    string player_1_Name = "" ;
+    string player_1_garlic = "" ;
+    bool player_1_name_Entered = false ;
+    bool player_1_garlic_Entered = false ;
+
+    Rectangle player_name_Box = {screen_width / 2 - screen_width / 6, screen_height / 2 , screen_width / 3 , 80} ;
+    Rectangle garlic_Box = {screen_width / 2 - screen_width / 6, screen_height / 2 + 150 , screen_width / 3 , 80} ;
+
+    bool player_Box = true ;  
+
+    while (!WindowShouldClose()) {
+
+        if (!player_1_name_Entered) {
+            int key = GetCharPressed() ;
+            while (key > 0) {
+                if ((key > 32 && key <= 125) && player_1_Name.length() < 32) {
+                    player_1_Name += (char)key ;
+                }
+                key = GetCharPressed() ;
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE) && !player_1_Name.empty()) {
+                player_1_Name.pop_back() ;
+            }
+
+            if (IsKeyPressed(KEY_ENTER) && !player_1_Name.empty()) {
+                player_1_name_Entered = true ;
+                player_Box = false ;
+            }
+        } 
+        else if (!player_1_garlic_Entered) {
+            int key = GetCharPressed() ;
+            while (key > 0) {
+                if (isdigit(key) && player_1_garlic.length() < 6) {
+                    player_1_garlic += (char)key ;
+                }
+                key = GetCharPressed() ;
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE) && !player_1_garlic.empty()) {
+                player_1_garlic.pop_back() ;
+            }
+
+            if (IsKeyPressed(KEY_ENTER) && !player_1_garlic.empty()) {
+                player_1_garlic_Entered = true ;
+            }
+        }
+        BeginDrawing() ;
+        ClearBackground(RAYWHITE) ;
+        DrawText("Player 1", player_name_Box.x / 2, player_name_Box.y / 4, 50, BLACK) ;
+        DrawText("Enter your name (max 32 characters):", player_name_Box.x, player_name_Box.y - 40, 30, BLACK) ;
+        DrawText("How many days ago you eat garlic :", garlic_Box.x, garlic_Box.y - 40, 30, BLACK) ;
+
+        DrawRectangleRec(player_name_Box, player_Box ? BLUE : GRAY) ;
+        DrawRectangleLinesEx(player_name_Box, 5, BLACK) ;
+
+        DrawRectangleRec(garlic_Box, (!player_Box && !player_1_garlic_Entered) ? BLUE : GRAY) ;
+        DrawRectangleLinesEx(garlic_Box, 5, BLACK) ;
+
+        DrawText(player_1_Name.c_str(), player_name_Box.x + 10, player_name_Box.y + 25, 30, BLACK) ;
+        DrawText(player_1_garlic.c_str(), garlic_Box.x + 10, garlic_Box.y + 25, 30, BLACK) ;
+
+        if (player_1_name_Entered && player_1_garlic_Entered) {
+            // this -> base_game->player_1.set_Player_name(player_1_Name) ;
+            break ;
+        }
+
+        EndDrawing() ;
     }
     
-    printLineDelay("\nEnter name for Player 1 :") ;
-    string player_1 ;
-    int garlic_player_1 ;
-    cin>> player_1 ;
+    string player_2_Name = "" ;
+    string player_2_garlic = "" ;
+    bool player_2_name_Entered = false ;
+    bool player_2_garlic_Entered = false ;
 
-    printLineDelay("\n\nEnter name for Player 2 :") ;
-    string player_2 ;
-    int garlic_player_2 ;
-    cin>> player_2 ;
+    player_Box = true ;  
 
-    cin.ignore() ;
-    cout<< "\n" ;
-    printLineDelay(player_1) ;
-    printLineDelay("how many days ago you eat garlic ? ") ;
-    garlic_player_1 = this -> CheckInputNumber() ;
+    while (!WindowShouldClose()) {
 
-    cout<< "\n" ;
-    printLineDelay(player_2) ;
-    printLineDelay("how many days ago you eat garlic ? ") ;
-    garlic_player_2 = this -> CheckInputNumber() ;
+        if (!player_2_name_Entered) {
+            int key = GetCharPressed() ;
+            while (key > 0) {
+                if ((key > 32 && key <= 125) && player_2_Name.length() < 32) {
+                    player_2_Name += (char)key ;
+                }
+                key = GetCharPressed() ;
+            }
 
-    if(garlic_player_1 > garlic_player_2) {
-        swap(player_1 , player_2) ;
-        swap(garlic_player_1 , garlic_player_2) ;
+            if (IsKeyPressed(KEY_BACKSPACE) && !player_2_Name.empty()) {
+                player_2_Name.pop_back() ;
+            }
+
+            if (IsKeyPressed(KEY_ENTER) && !player_2_Name.empty()) {
+                player_2_name_Entered = true ;
+                player_Box = false ;
+            }
+        } 
+        else if (!player_2_garlic_Entered) {
+            int key = GetCharPressed() ;
+            while (key > 0) {
+                if (isdigit(key) && player_2_garlic.length() < 6) {
+                    player_2_garlic += (char)key ;
+                }
+                key = GetCharPressed() ;
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE) && !player_2_garlic.empty()) {
+                player_2_garlic.pop_back() ;
+            }
+
+            if (IsKeyPressed(KEY_ENTER) && !player_2_garlic.empty()) {
+                player_2_garlic_Entered = true ;
+            }
+        }
+        BeginDrawing() ;
+        ClearBackground(RAYWHITE) ;
+
+        DrawText("Player 2", player_name_Box.x / 2, player_name_Box.y / 4, 50, BLACK) ;
+        DrawText("Enter your name (max 32 characters):", player_name_Box.x, player_name_Box.y - 40, 30, BLACK) ;
+        DrawText("How many days ago you eat garlic :", garlic_Box.x, garlic_Box.y - 40, 30, BLACK) ;
+
+        DrawRectangleRec(player_name_Box, player_Box ? BLUE : GRAY) ;
+        DrawRectangleLinesEx(player_name_Box, 5, BLACK) ;
+
+        DrawRectangleRec(garlic_Box, (!player_Box && !player_2_garlic_Entered) ? BLUE : GRAY) ;
+        DrawRectangleLinesEx(garlic_Box, 5, BLACK) ;
+
+        DrawText(player_2_Name.c_str(), player_name_Box.x + 10, player_name_Box.y + 25, 30, BLACK) ;
+        DrawText(player_2_garlic.c_str(), garlic_Box.x + 10, garlic_Box.y + 25, 30, BLACK) ;
+
+        if (player_2_name_Entered && player_2_garlic_Entered) {
+            // this -> base_game->player_2.set_Player_name(player_2_Name) ;
+            break ;
+        }
+
+        EndDrawing() ;
+    }
+    
+    if(stoi(player_1_garlic) > stoi(player_2_garlic)) {
+        swap(player_1_Name , player_2_Name) ;
     }
 
-    char choose_player_1 ;
+    this -> base_game->player_1.set_Player_name(player_1_Name) ;
+    this -> base_game->player_2.set_Player_name(player_2_Name) ;
+    this -> player_1 = player_1_Name ;
+    this -> player_2 = player_2_Name ;
+
     shared_ptr<Hero> mayor = make_shared<Mayor>();
     shared_ptr<Hero> archaologist = make_shared<Archaologist>() ;
     shared_ptr<Hero> courier = make_shared<Courier>() ;
     shared_ptr<Hero> scientist = make_shared<Scientist>() ;
-    while(1){
-        printLineDelay(player_1) ;
-        printLineDelay("\nChoose your hero 1.Mayer , 2.Archaologist , 3.Courier , 4.Scientist ? ") ;
+    const int box_size = 250;
+    const int distance_between = 100;
 
-        char choose ;
-        cin>> choose ;
+    vector<string> class_names = {mayor -> get_name(), archaologist -> get_name(), courier -> get_name(), scientist -> get_name()};
+    vector<Rectangle> class_boxes;
+    int selected_class = -1;
 
-        if(choose == '1') {
-            this -> base_game.set_player_1(mayor) ;
-            this -> base_game.player_1.set_Player_name(player_1) ;
-            this -> base_game.player_1.get_Player_Hero()->set_player_name(player_1) ;
-            choose_player_1 = choose ;
-            break ;
-        }
-        else if(choose == '2') {
-            this -> base_game.set_player_1(archaologist) ;
-            this -> base_game.player_1.set_Player_name(player_1) ;
-            this -> base_game.player_1.get_Player_Hero()->set_player_name(player_1) ;
-            choose_player_1 = choose ;
-            break ;
-        }
-        else if(choose == '3') {
-            this -> base_game.set_player_1(courier) ;
-            this -> base_game.player_1.set_Player_name(player_1) ;
-            this -> base_game.player_1.get_Player_Hero()->set_player_name(player_1) ;
-            choose_player_1 = choose ;
-            break ;
-        }
-        else if(choose == '4') {
-            this -> base_game.set_player_1(scientist) ;
-            this -> base_game.player_1.set_Player_name(player_1) ;
-            this -> base_game.player_1.get_Player_Hero()->set_player_name(player_1) ;
-            choose_player_1 = choose ;
-            break ;
+    float total_width = 2 * box_size + distance_between; // total space this boxes get
+    float start_point_X = (screen_width - total_width) / 2;
+    float start_point_Y = (screen_height - total_width) / 2 + 50; 
+
+    for (int row = 0; row < 2; row++) {
+        for (int col = 0; col < 2; col++) {
+            Rectangle temp_box = {
+                start_point_X + col * (box_size + distance_between),
+                start_point_Y + row * (box_size + distance_between),
+                (float)box_size,
+                (float)box_size
+            };
+            class_boxes.push_back(temp_box);
         }
     }
 
-    while(1){
-        printLineDelay(player_2) ;
-        printLineDelay("\nChoose your hero 1.Mayer , 2.Archaologist , 3.Courier , 4.Scientist ? ") ;
+    while (!WindowShouldClose()) {
+        Vector2 mouse = GetMousePosition();
 
-        char choose ;
-        cin>> choose ;
-
-        if(choose == choose_player_1) {
-            printLineDelay("\nplayer 1 take this hero") ;
-            continue;
+        for (int i = 0; i < class_boxes.size(); i++) {
+            if (CheckCollisionPointRec(mouse, class_boxes[i])) {
+                selected_class = i;
+                break ;
+            }
+            else {
+                selected_class = -1 ;
+            }
         }
 
-        if(choose == '1') {
-            this -> base_game.set_player_2(mayor) ;
-            this -> base_game.player_2.set_Player_name(player_2) ;
-            this -> base_game.player_2.get_Player_Hero()->set_player_name(player_2) ;
-            break ;
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        DrawText(TextFormat(base_game->player_1.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, WHITE) ;
+
+        if (selected_class != -1) {//thanks form python because learn us %s in cpp , but i like f""
+            DrawText(TextFormat("You want to selected: %s", class_names[selected_class].c_str()), start_point_X / 3, start_point_Y / 2, 40, WHITE);
+            if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+
+                if(selected_class == 0) {
+                    this -> base_game->set_player_1(mayor) ;
+                    class_names[0] = "Selected" ;
+                }
+                else if(selected_class == 1) {
+                    this -> base_game->set_player_1(archaologist) ;
+                    class_names[1] = "Selected" ;
+                }
+                else if(selected_class == 2) {
+                    this -> base_game->set_player_1(courier) ;
+                    class_names[2] = "Selected" ;
+                }
+                else if(selected_class == 3) {
+                    this -> base_game->set_player_1(scientist) ;
+                    class_names[3] = "Selected" ;
+                }
+                this -> base_game->player_1.get_Player_Hero()->set_player_name(player_1) ;
+                break ;
+            }
+        } else {
+            DrawText("Select your role:", start_point_X / 3, start_point_Y / 2 , 40, GRAY);
         }
-        else if(choose == '2') {
-            this -> base_game.set_player_2(archaologist) ;
-            this -> base_game.player_2.set_Player_name(player_2) ;
-            this -> base_game.player_2.get_Player_Hero()->set_player_name(player_2) ;
-            break ;
+
+
+        for (int i = 0; i < class_boxes.size(); i++) {
+            Color box_color = (selected_class == i) ? LIME : GRAY;
+            DrawRectangleRec(class_boxes[i], box_color);
+            DrawRectangleLinesEx(class_boxes[i], 3, DARKGRAY);
+
+            int text_width = MeasureText(class_names[i].c_str(), 30);
+            DrawText(
+                class_names[i].c_str(),
+                class_boxes[i].x + (box_size - text_width) / 2,
+                class_boxes[i].y + box_size / 2 - 15,
+                30,
+                WHITE
+            );
         }
-        else if(choose == '3') {
-            this -> base_game.set_player_2(courier) ;
-            this -> base_game.player_2.set_Player_name(player_2) ;
-            this -> base_game.player_2.get_Player_Hero()->set_player_name(player_2) ;
-            break ;
-        }
-        else if(choose == '4') {
-            this -> base_game.set_player_2(scientist) ;
-            this -> base_game.player_2.set_Player_name(player_2) ;
-            this -> base_game.player_2.get_Player_Hero()->set_player_name(player_2) ;
-            break ;
-        }
+
+        EndDrawing();
     }
 
-    base_game.player_1.get_Player_Hero()->set_perk(base_game.get_random_perk()) ;
-    base_game.player_2.get_Player_Hero()->set_perk(base_game.get_random_perk()) ;
+    selected_class = -1;
 
-    system("clear");
+    while (!WindowShouldClose()) {
+        Vector2 mouse = GetMousePosition();
+
+        for (int i = 0; i < class_boxes.size(); i++) {
+            if (CheckCollisionPointRec(mouse, class_boxes[i])) {
+                selected_class = i;
+                break ;
+            }
+            else {
+                selected_class = -1 ;
+            }
+        }
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        DrawText(TextFormat(base_game->player_2.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, WHITE) ;
+
+        if (selected_class != -1) {
+            DrawText(TextFormat("You want to selected: %s", class_names[selected_class].c_str()), start_point_X / 3, start_point_Y / 2, 40, WHITE);
+            if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                if(class_names[selected_class] == "Selected") {
+                    
+                }
+                else if(selected_class == 0) {
+                    this -> base_game->set_player_2(mayor) ;
+                    this -> base_game->player_2.get_Player_Hero()->set_player_name(player_2) ;
+                    break ;
+                }
+                else if(selected_class == 1) {
+                    this -> base_game->set_player_2(archaologist) ;
+                    this -> base_game->player_2.get_Player_Hero()->set_player_name(player_2) ;
+                    break ;
+                }
+                else if(selected_class == 2) {
+                    this -> base_game->set_player_2(courier) ;
+                    this -> base_game->player_2.get_Player_Hero()->set_player_name(player_2) ;
+                    break ;
+                }
+                else if(selected_class == 3) {
+                    this -> base_game->set_player_2(scientist) ;
+                    this -> base_game->player_2.get_Player_Hero()->set_player_name(player_2) ;
+                    break ;
+                }
+                
+            }
+        } else {
+            DrawText("Select your role:", start_point_X / 3, start_point_Y / 2 , 40, GRAY);
+        }
+
+
+        for (int i = 0; i < class_boxes.size(); i++) {
+            Color box_color = (selected_class == i) ? LIME : GRAY;
+            DrawRectangleRec(class_boxes[i], box_color);
+            DrawRectangleLinesEx(class_boxes[i], 3, DARKGRAY);
+
+            int text_width = MeasureText(class_names[i].c_str(), 30);
+            DrawText(
+                class_names[i].c_str(),
+                class_boxes[i].x + (box_size - text_width) / 2,
+                class_boxes[i].y + box_size / 2 - 15,
+                30,
+                WHITE
+            );
+        }
+
+        EndDrawing();
+    }
+
+    base_game->player_1.get_Player_Hero()->set_perk(base_game->get_random_perk()) ;
+    base_game->player_2.get_Player_Hero()->set_perk(base_game->get_random_perk()) ;
+
 }
 
 void Program::Run() {
 
-    this -> base_game.Game_map.Print_Map_And_All_Info(this->base_game.player_1.get_Player_Hero()->get_now_place() , this->base_game.player_2.get_Player_Hero()->get_now_place()  , this->base_game.get_dracula_place() , this->base_game.get_invisible_man_place() , this->base_game.dracula.get_casket() , this->base_game.invisible_man.get_investigate() , base_game.get_Terror_level()) ;
+    screen_width = GetScreenWidth() ;
+    screen_height = GetScreenHeight() ;
+
+    this -> base_game->Game_map.Print_Map_And_All_Info(this->base_game->player_1.get_Player_Hero()->get_now_place() , this->base_game->player_2.get_Player_Hero()->get_now_place()  , this->base_game->get_dracula_place() , this->base_game->get_invisible_man_place() , this->base_game->dracula.get_casket() , this->base_game->invisible_man.get_investigate() , base_game->get_Terror_level()) ;
     
-    if(!this -> base_game.turn->phase(this -> base_game)) {
+    if(!this -> base_game->turn->phase(*this -> base_game)) {
         throw logic_error("somthing in phase goes wrong\n") ;
     }
-    if(base_game.turn != base_game.monster_turn) {
+    if(base_game->turn != base_game->monster_turn) {
         printLineDelay("MONSTER PHASE SKIPED\n" , 70) ;
         printLineDelay("Click to continue .......\n") ;
         cin.ignore() ;
@@ -174,26 +384,26 @@ void Program::Run() {
         return ;
     }
         
-    if(!this -> base_game.turn->phase(this -> base_game)) {
+    if(!this -> base_game->turn->phase(*this -> base_game)) {
         throw logic_error("somthing in phase goes wrong\n") ;
     }
-                   
+
     cout<< "Click to continue .......\n" ;
     cin.ignore() ;
     cin.ignore() ;
-    // system("clear");
+
 }
 
 bool Program::End() {
-    if(base_game.get_monster_card_number() == 0) {
+    if(base_game->get_monster_card_number() == 0) {
         printLineDelay("\n\nMONSTER SIDE WINS\n\n" , 100) ;
         return true ;
     }
-    else if(base_game.get_Terror_level() == 5) {
+    else if(base_game->get_Terror_level() == 5) {
         printLineDelay("\n\nMONSTER SIDE WINS\n\n" , 100) ;
         return true ;
     }
-    else if(base_game.get_dracula_place() == "DEAD" && base_game.get_invisible_man_place() == "DEAD") {
+    else if(base_game->get_dracula_place() == "DEAD" && base_game->get_invisible_man_place() == "DEAD") {
         printLineDelay("\n\nHERO SIDE WINS\n\n" , 100) ;
         return true ;
     }
@@ -210,48 +420,49 @@ void Program::printLineDelay(const string& line, int delayMs) {
     cout << endl;
 }
 
-void Program::showWelcomeScreen() {
-    system("clear");  // Use "cls" on Windows
-    cout << R"(
-
-██╗  ██╗ ██████╗ ██████╗ ██████╗ ██╗ ███████╗██╗███████╗██████╗ 
-██║  ██║██╔═══██╗██╔══██╗██╔══██╗██║ ██╔════╝██║██╔════╝██╔══██╗
-███████║██║   ██║██████╔╝██████╔╝██║ █████╗  ██║█████╗  ██║  ██║
-██╔══██║██║   ██║██╔══██╗██╔══██╗██║ ██╔══╝  ██║██╔══╝  ██║  ██║
-██║  ██║╚██████╔╝██║  ██║██║  ██║██║ ██║     ██║███████╗██████╔╝
-╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═╝     ╚═╝╚══════╝╚═════╝ 
-
-    )" << endl;
-
-    printLineDelay("--------------------------------------------------------", 20);
-    printLineDelay("              WELCOME TO THE HORRIFIED GAME             ", 40);
-    printLineDelay("--------------------------------------------------------", 20);
-    cout << endl;
-
-    printLineDelay("Prepare yourself to face unspeakable horrors...", 40);
-    printLineDelay("Will you survive the night? Let's find out!", 40);
-    cout << endl;
-
-    printLineDelay("Press ENTER to continue...", 30);
-    cin.ignore();
-}
-
-
 int Program::CheckInputNumber() {
     int number;
-    std::string input;
+    string input;
 
     while (true) {
         printLineDelay("Please enter a number: ");
-        std::getline(std::cin, input);
+        getline(cin, input);
 
-        std::stringstream ss(input);
+        stringstream ss(input);
 
         if (ss >> number && ss.eof()) {
             return number ;
             break;
         } else {
-            std::cout << "Invalid input. Please try again.\n";
+            cout << "Invalid input. Please try again.\n";
         }
     }
+}
+
+void Program::set_current_screen(Game_State state) {
+    this -> current_screen = state ;
+}
+
+Game_State & Program::get_current_screen() {
+    return this -> current_screen ;
+}
+
+int Program::get_screen_width() {
+    return this -> screen_width ;
+}
+
+int Program::get_screen_height() {
+    return this -> screen_height ;
+}
+
+shared_ptr<Game> Program::get_game() {
+    return this->base_game;
+}
+
+void Program::set_screen_width(int width) {
+    this -> screen_width = width ;
+}
+
+void Program::set_screen_height(int height) {
+    this -> screen_height = height ;
 }

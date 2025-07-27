@@ -7,6 +7,7 @@ class Sunrise : public Monster_card {
 
     public :
 
+        Sunrise() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

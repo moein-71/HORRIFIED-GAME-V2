@@ -69,3 +69,15 @@ bool Invisible_man::can_kill_villager(string villager){
 bool Invisible_man::check_investigate() {
     return !investigate["Inn"] && !investigate["Barn"] && !investigate["Institute"] && !investigate["Laboratory"] && !investigate["Mansion"] ;
 }
+
+array<pair<string , bool> , 5> Invisible_man::get_investigate_for_save() {
+    array<pair<string , bool> , 5> return_investigate ;
+
+    int i{} ;
+    for(auto this_investigate : this->investigate) {
+        return_investigate[i] = {this_investigate.first , this_investigate.second} ;
+        ++i ;
+    }
+
+    return return_investigate ;
+}

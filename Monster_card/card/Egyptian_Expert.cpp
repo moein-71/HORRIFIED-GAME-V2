@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Egyptian_expert::Egyptian_expert() {
+    this -> set_name("Egyptian_Expert") ;
+}
+
 void Egyptian_expert::ability(Game& gamestage) {
 
     constexpr int add_item = 3 ;

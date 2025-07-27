@@ -12,18 +12,20 @@ bool Turn_hero::phase(Game& gamestage) {
     gamestage.turn->handle_turn(gamestage) ;
     shared_ptr<Hero_Action> action = nullptr ;
     
-    remain_actions = gamestage.player_turn->get_Player_Hero()->get_action()  + gamestage.get_added_action() ;
-
+    if(gamestage.remain_actions == 0) {
+        gamestage.remain_actions = gamestage.player_turn->get_Player_Hero()->get_action()  + gamestage.get_added_action() ;
+    }
+    
     char choose = 0 ;
 
-    while(remain_actions > 0) {
-        gamestage.printLineDelay("Remain actions : " + to_string(remain_actions) + '\n' + "1.Move  2.Guide  3.Pick up  4.Advance  5.Defeat  6.Special Action  7.Use perk  8.Status  9.Action_info  0.Skip\n" + "\nChoose your action : " );
+    while(gamestage.remain_actions > 0) {
+        gamestage.printLineDelay("Remain actions : " + to_string(gamestage.remain_actions) + '\n' + "1.Move  2.Guide  3.Pick up  4.Advance  5.Defeat  6.Special Action  7.Use perk  8.Status  9.Action_info  0.Skip\n" + "\nChoose your action : " );
         cin>> choose ;
 
         if(choose == '1') {
             action = make_shared<Move_Hero>() ;
             if(action -> Activate(gamestage)) {
-                remain_actions-- ;
+                gamestage.remain_actions-- ;
                 gamestage.printLineDelay("Move done\n") ;
                 continue;
             }
@@ -32,7 +34,7 @@ bool Turn_hero::phase(Game& gamestage) {
         else if(choose == '2') {
             action = make_shared<Guide>() ;
             if(action -> Activate(gamestage)) {
-                remain_actions-- ;
+                gamestage.remain_actions-- ;
                 gamestage.printLineDelay( "Guide done\n") ;
                 continue;
             }
@@ -41,7 +43,7 @@ bool Turn_hero::phase(Game& gamestage) {
         else if(choose == '3') {
             action = make_shared<Pick_Up>() ;
             if(action -> Activate(gamestage)) {
-                remain_actions-- ;
+                gamestage.remain_actions-- ;
                 gamestage.printLineDelay( "Pick_Up done\n") ;
                 continue;
             }
@@ -50,7 +52,7 @@ bool Turn_hero::phase(Game& gamestage) {
         else if(choose == '4') {
             action = make_shared<Advance>() ;
             if(action -> Activate(gamestage)) {
-                remain_actions-- ;
+                gamestage.remain_actions-- ;
                 gamestage.printLineDelay( "Advance done\n") ;
                 continue;
             }
@@ -59,7 +61,7 @@ bool Turn_hero::phase(Game& gamestage) {
         else if(choose == '5') {
             action = make_shared<Defeat>() ;
             if(action -> Activate(gamestage)) {
-                remain_actions-- ;
+                gamestage.remain_actions-- ;
                 gamestage.printLineDelay( "Defeat done\n") ;
                 continue;
             }
@@ -68,7 +70,7 @@ bool Turn_hero::phase(Game& gamestage) {
         else if(choose == '6') {
             action = make_shared<Special_Action>() ;
                 if(action -> Activate(gamestage)) {
-                remain_actions-- ;
+                gamestage.remain_actions-- ;
                 gamestage.printLineDelay( "Special_Action done\n") ;
                 continue;
             }
@@ -78,7 +80,7 @@ bool Turn_hero::phase(Game& gamestage) {
             auto perk_variant = gamestage.player_turn->get_Player_Hero()->get_perk();
             if (auto perk_ptr = std::get_if<std::shared_ptr<Perk_card>>(&perk_variant)) {
                 (*perk_ptr)->ability(gamestage);
-                remain_actions +=  gamestage.get_added_action() ;
+                gamestage.remain_actions +=  gamestage.get_added_action() ;
                 continue;
             }
             else {
@@ -101,7 +103,7 @@ bool Turn_hero::phase(Game& gamestage) {
         }
     }
 
-    if(remain_actions == 0) {
+    if(gamestage.remain_actions == 0) {
         return true ;
     }
     else {
@@ -112,12 +114,4 @@ bool Turn_hero::phase(Game& gamestage) {
 void Turn_hero::handle_turn(Game& gamestage) {
 
     gamestage.turn = gamestage.monster_turn ;
-}
-
-void Turn_hero::set_remain_actions(int remain_actions) {
-    this -> remain_actions = remain_actions ;
-}
-
-int Turn_hero::get_remain_actions() {
-    return this -> remain_actions ;
 }

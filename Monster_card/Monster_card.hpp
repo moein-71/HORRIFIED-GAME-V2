@@ -22,7 +22,12 @@ class Monster_card {
         virtual void ability(Game& gamestage) = 0 ;
         virtual std::string info() const = 0 ;
 
+        void set_name(std::string name) ;
+        std::string get_name() ;
+
     private :
+
+        std::string name ;
 };
 
 #endif //MONSTER_CARD_HPP

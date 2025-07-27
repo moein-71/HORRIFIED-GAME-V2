@@ -7,6 +7,7 @@ class Form_of_The_bat : public Monster_card {
 
     public :
 
+        Form_of_The_bat() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

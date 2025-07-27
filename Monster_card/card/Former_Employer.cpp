@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Former_employer::Former_employer() {
+    this -> set_name("Former_Employer") ;
+}
+
 void Former_employer::ability(Game& gamestage) {
     
     constexpr int add_item = 3 ;

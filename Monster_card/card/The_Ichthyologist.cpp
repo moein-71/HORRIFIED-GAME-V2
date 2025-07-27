@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+The_ichthyologist::The_ichthyologist() {
+    this -> set_name("The_Ichthyologist") ;
+}
+
 void The_ichthyologist::ability(Game& gamestage) {
 
     constexpr int add_item = 3 ;

@@ -7,6 +7,7 @@ class Hypnotic_gaze : public Monster_card {
 
     public :
 
+        Hypnotic_gaze() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

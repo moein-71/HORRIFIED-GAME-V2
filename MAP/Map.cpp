@@ -42,6 +42,18 @@ std::string Map::get_villager_safe_place(std::string place , std::string name) {
     return "" ;
 }
 
+vector<pair<string , string>> Map::get_all_villager_for_save() {
+    vector<pair<string , string>> return_villager ;
+
+    for(auto place_and_vec_villager : this->villager_place) {
+        for(auto villager : place_and_vec_villager.second) {
+            return_villager.push_back({villager.get_name() , place_and_vec_villager.first}) ;
+        }
+    }
+
+    return return_villager ;
+}
+
 vector<string> Map::get_connection(std::string place){
     return connection[place] ;
 }
@@ -57,6 +69,17 @@ int Map::get_item_number(std::string place , std::string item_name) {
     return 0 ;
 }
 
+vector<pair<string , int>> Map::get_all_items() {
+    vector<pair<string , int>> return_items ;
+
+    for(auto place_and_items : this->item_place) {
+        for(auto item_and_amount : place_and_items.second) {
+            return_items.push_back({item_and_amount.first.get_name() , item_and_amount.second}) ;
+        }
+    }
+
+    return return_items ;
+}
 
 void Map::set_connection(){
 

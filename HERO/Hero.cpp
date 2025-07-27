@@ -394,3 +394,25 @@ void Hero::printLineDelay(const std::string& line, int delayMs) {
     }
     cout << endl;
 }
+
+vector<pair<string , int>> Hero::get_items_for_save() {
+    vector<pair<string , int>> return_items ;
+
+    for(auto this_item : this->item) {
+        return_items.push_back({this_item.first.get_name() , this_item.second}) ;
+    }
+
+    return return_items ;
+}
+
+vector<string> Hero::get_perk_for_save() {
+    vector<string> return_perks ;
+
+    for(auto this_perk : this->perk) {
+        for(int i{} ; i < this_perk.second ; ++i) {
+            return_perks.push_back(this_perk.first->get_perk_name()) ;
+        }
+    }
+
+    return return_perks ;
+}

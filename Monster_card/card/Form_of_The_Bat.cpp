@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Form_of_The_bat::Form_of_The_bat() {
+    this -> set_name("Form_of_The_Bat") ;
+}
+
 void Form_of_The_bat::ability(Game& gamestage) {
 
     constexpr int add_item = 2 ;

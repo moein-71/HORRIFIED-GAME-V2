@@ -7,6 +7,7 @@ class Fortune_teller : public Monster_card {
 
     public :
 
+        Fortune_teller() ;
         void ability(Game& gamestage) override ;
         std::string info() const override ;
 

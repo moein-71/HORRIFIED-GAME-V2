@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Hypnotic_gaze::Hypnotic_gaze() {
+    this -> set_name("Hypnotic_Gaze") ;
+}
+
 void Hypnotic_gaze::ability(Game& gamestage) {
     
      constexpr int add_item = 2 ;
@@ -103,7 +107,7 @@ void Hypnotic_gaze::ability(Game& gamestage) {
 }
 
 std::string Hypnotic_gaze::info() const {
-    string info = "\nHypnotic Gaze\n" ;
+    string info = "\nHypnotic_Gaze\n" ;
     info += "add 2 item\n" ;
     info += "closest villager or hero get closer one block\n" ;
     info += "Strike : 1 Move , 2 Dice\n" ;

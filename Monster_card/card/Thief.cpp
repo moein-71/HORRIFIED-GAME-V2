@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Thief::Thief() {
+    this -> set_name("Thief") ;
+}
+
  void Thief::ability(Game& gamestage) {
 
     constexpr int add_item = 2 ;

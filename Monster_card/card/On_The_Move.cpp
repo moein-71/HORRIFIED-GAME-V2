@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+On_the_move::On_the_move() {
+    this -> set_name("On_The_Move") ;
+}
+
 void On_the_move::ability(Game& gamestage) {
     constexpr int add_item = 3 ;
     constexpr int move = 3 ;

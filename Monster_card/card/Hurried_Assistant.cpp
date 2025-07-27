@@ -5,6 +5,10 @@
 
 using namespace std ;
 
+Hurried_assistant::Hurried_assistant() {
+    this -> set_name("Hurried_Assistant") ;
+}
+
 void Hurried_assistant::ability(Game& gamestage) {
 
     constexpr int add_item = 3 ;
