@@ -51,6 +51,13 @@ void Program::Start() {
     for(int i{} ; i < 12 ; ++i) {
         base_game->set_item_to_map(base_game->get_random_item()) ;
     }
+        cout<< "\n\n\nmoz\n\n\n" ;
+
+    Texture2D img_start = LoadTexture("../Asset/Start.jpg") ;
+    float img_start_height = float(float(float(this->screen_width) * float(img_start.height)) / float(img_start.width)) ;
+    Rectangle source = { 0, 0, img_start.width, img_start.height };
+    Rectangle dest = { 0, 0, this->screen_width , this->screen_height };  // x, y, width, height
+    Vector2 origin = { 0, 0 } ;
 
     string player_1_Name = "" ;
     string player_1_garlic = "" ;
@@ -60,9 +67,12 @@ void Program::Start() {
     Rectangle player_name_Box = {screen_width / 2 - screen_width / 6, screen_height / 2 , screen_width / 3 , 80} ;
     Rectangle garlic_Box = {screen_width / 2 - screen_width / 6, screen_height / 2 + 150 , screen_width / 3 , 80} ;
 
-    bool player_Box = true ;  
+    bool player_Box = true ;
 
-    while (!WindowShouldClose()) {
+    while (this -> current_screen != GAME_MENU) {
+        if(IsKeyPressed(KEY_ESCAPE)) {
+            this -> current_screen = GAME_MENU ;
+        }
 
         if (!player_1_name_Entered) {
             int key = GetCharPressed() ;
@@ -100,16 +110,17 @@ void Program::Start() {
             }
         }
         BeginDrawing() ;
-        ClearBackground(RAYWHITE) ;
-        DrawText("Player 1", player_name_Box.x / 2, player_name_Box.y / 4, 50, BLACK) ;
-        DrawText("Enter your name (max 32 characters):", player_name_Box.x, player_name_Box.y - 40, 30, BLACK) ;
-        DrawText("How many days ago you eat garlic :", garlic_Box.x, garlic_Box.y - 40, 30, BLACK) ;
+        DrawTexturePro(img_start , source , dest , origin , 0 ,  WHITE) ;
+        ClearBackground(BLACK) ;
+        DrawText("Player 1", player_name_Box.x / 2, player_name_Box.y / 4, 50, WHITE) ;
+        DrawText("Enter your name (max 32 characters):", player_name_Box.x, player_name_Box.y - 40, 30, WHITE) ;
+        DrawText("How many days ago you eat garlic :", garlic_Box.x, garlic_Box.y - 40, 30, WHITE) ;
 
         DrawRectangleRec(player_name_Box, player_Box ? BLUE : GRAY) ;
-        DrawRectangleLinesEx(player_name_Box, 5, BLACK) ;
+        DrawRectangleLinesEx(player_name_Box, 5, RED) ;
 
         DrawRectangleRec(garlic_Box, (!player_Box && !player_1_garlic_Entered) ? BLUE : GRAY) ;
-        DrawRectangleLinesEx(garlic_Box, 5, BLACK) ;
+        DrawRectangleLinesEx(garlic_Box, 5, RED) ;
 
         DrawText(player_1_Name.c_str(), player_name_Box.x + 10, player_name_Box.y + 25, 30, BLACK) ;
         DrawText(player_1_garlic.c_str(), garlic_Box.x + 10, garlic_Box.y + 25, 30, BLACK) ;
@@ -121,7 +132,6 @@ void Program::Start() {
 
         EndDrawing() ;
     }
-    
     string player_2_Name = "" ;
     string player_2_garlic = "" ;
     bool player_2_name_Entered = false ;
@@ -129,8 +139,10 @@ void Program::Start() {
 
     player_Box = true ;  
 
-    while (!WindowShouldClose()) {
-
+    while (this -> current_screen != GAME_MENU) {
+        if(IsKeyPressed(KEY_ESCAPE)) {
+            this -> current_screen = GAME_MENU ;
+        }
         if (!player_2_name_Entered) {
             int key = GetCharPressed() ;
             while (key > 0) {
@@ -167,17 +179,18 @@ void Program::Start() {
             }
         }
         BeginDrawing() ;
-        ClearBackground(RAYWHITE) ;
+        DrawTexturePro(img_start , source , dest , origin , 0 ,  WHITE) ;
+        ClearBackground(BLACK) ;
 
-        DrawText("Player 2", player_name_Box.x / 2, player_name_Box.y / 4, 50, BLACK) ;
-        DrawText("Enter your name (max 32 characters):", player_name_Box.x, player_name_Box.y - 40, 30, BLACK) ;
-        DrawText("How many days ago you eat garlic :", garlic_Box.x, garlic_Box.y - 40, 30, BLACK) ;
+        DrawText("Player 2", player_name_Box.x / 2, player_name_Box.y / 4, 50, WHITE) ;
+        DrawText("Enter your name (max 32 characters):", player_name_Box.x, player_name_Box.y - 40, 30, WHITE) ;
+        DrawText("How many days ago you eat garlic :", garlic_Box.x, garlic_Box.y - 40, 30, WHITE) ;
 
-        DrawRectangleRec(player_name_Box, player_Box ? BLUE : GRAY) ;
-        DrawRectangleLinesEx(player_name_Box, 5, BLACK) ;
+        DrawRectangleRec(player_name_Box, player_Box ? RED : GRAY) ;
+        DrawRectangleLinesEx(player_name_Box, 5, BLUE) ;
 
-        DrawRectangleRec(garlic_Box, (!player_Box && !player_2_garlic_Entered) ? BLUE : GRAY) ;
-        DrawRectangleLinesEx(garlic_Box, 5, BLACK) ;
+        DrawRectangleRec(garlic_Box, (!player_Box && !player_2_garlic_Entered) ? RED : GRAY) ;
+        DrawRectangleLinesEx(garlic_Box, 5, BLUE) ;
 
         DrawText(player_2_Name.c_str(), player_name_Box.x + 10, player_name_Box.y + 25, 30, BLACK) ;
         DrawText(player_2_garlic.c_str(), garlic_Box.x + 10, garlic_Box.y + 25, 30, BLACK) ;
@@ -189,7 +202,13 @@ void Program::Start() {
 
         EndDrawing() ;
     }
-    
+    if(player_1_garlic == "") {
+        player_1_garlic = "0" ;
+    }
+    if(player_2_garlic == "") {
+        player_2_garlic = "0" ;
+    }
+
     if(stoi(player_1_garlic) > stoi(player_2_garlic)) {
         swap(player_1_Name , player_2_Name) ;
     }
@@ -226,7 +245,11 @@ void Program::Start() {
         }
     }
 
-    while (!WindowShouldClose()) {
+    while (this -> current_screen != GAME_MENU) {
+
+        if(IsKeyPressed(KEY_ESCAPE)) {
+            this -> current_screen = GAME_MENU ;
+        }
         Vector2 mouse = GetMousePosition();
 
         for (int i = 0; i < class_boxes.size(); i++) {
@@ -240,6 +263,8 @@ void Program::Start() {
         }
 
         BeginDrawing();
+
+        DrawTexturePro(img_start , source , dest , origin , 0 ,  WHITE) ;        
         ClearBackground(BLACK);
 
         DrawText(TextFormat(base_game->player_1.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, WHITE) ;
@@ -292,7 +317,10 @@ void Program::Start() {
 
     selected_class = -1;
 
-    while (!WindowShouldClose()) {
+    while (this -> current_screen != GAME_MENU) {
+        if(IsKeyPressed(KEY_ESCAPE)) {
+            this -> current_screen = GAME_MENU ;
+        }
         Vector2 mouse = GetMousePosition();
 
         for (int i = 0; i < class_boxes.size(); i++) {
@@ -306,6 +334,8 @@ void Program::Start() {
         }
 
         BeginDrawing();
+
+        DrawTexturePro(img_start , source , dest , origin , 0 ,  WHITE) ;       
         ClearBackground(BLACK);
 
         DrawText(TextFormat(base_game->player_2.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, WHITE) ;
@@ -342,7 +372,6 @@ void Program::Start() {
             DrawText("Select your role:", start_point_X / 3, start_point_Y / 2 , 40, GRAY);
         }
 
-
         for (int i = 0; i < class_boxes.size(); i++) {
             Color box_color = (selected_class == i) ? LIME : GRAY;
             DrawRectangleRec(class_boxes[i], box_color);
@@ -361,8 +390,14 @@ void Program::Start() {
         EndDrawing();
     }
 
-    base_game->player_1.get_Player_Hero()->set_perk(base_game->get_random_perk()) ;
-    base_game->player_2.get_Player_Hero()->set_perk(base_game->get_random_perk()) ;
+    if(this->current_screen != GAME_MENU){
+        base_game->player_1.get_Player_Hero()->set_perk(base_game->get_random_perk()) ;
+        base_game->player_2.get_Player_Hero()->set_perk(base_game->get_random_perk()) ;
+    }
+
+    UnloadTexture(img_start) ;
+
+    cout<< "\n\n\nmoz\n\n\n" ;
 
 }
 
@@ -455,14 +490,15 @@ int Program::get_screen_height() {
     return this -> screen_height ;
 }
 
-shared_ptr<Game> Program::get_game() {
-    return this->base_game;
-}
-
 void Program::set_screen_width(int width) {
     this -> screen_width = width ;
 }
 
 void Program::set_screen_height(int height) {
     this -> screen_height = height ;
+}
+
+void Program::set_new_game() {
+    this -> base_game.reset() ;
+    this -> base_game = make_shared<Game>() ;
 }

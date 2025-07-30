@@ -95,6 +95,7 @@ bool Turn_hero::phase(Game& gamestage) {
             cout<< Move_Hero().info() << Guide().info() << Pick_Up().info() << Advance().info() << Defeat().info() << Special_Action().info() << '\n' ;
         }
         else if(choose == '0'){
+            gamestage.remain_actions = 0 ;
             return true ;
         }
         else {

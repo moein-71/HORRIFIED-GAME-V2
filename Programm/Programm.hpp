@@ -19,6 +19,8 @@
 #include <new>
 
 class Program {
+
+    friend class Menu ;
     
     public : 
 
@@ -38,8 +40,6 @@ class Program {
         void set_screen_width(int ) ;
         void set_screen_height(int ) ;
         void set_new_game() ;
-
-        std::shared_ptr<Game> get_game() ;
 
     private : 
 

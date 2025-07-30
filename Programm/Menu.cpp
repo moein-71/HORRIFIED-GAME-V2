@@ -6,14 +6,22 @@
 #include "Perk_card.hpp"
 #include "Monster_card.hpp"
 #include "Item.hpp"
+#include "Programm.hpp"
 
 using namespace std;
 
-void Menu::Run(shared_ptr<Game> game , Game_State& current_screen , int screen_width , int screen_height){
+void Menu::Run(Program& program , Game_State& current_screen , int screen_width , int screen_height){
+
+    Texture2D img_menu = LoadTexture("../Asset/Menu.jpg") ;
+    float img_start_height = float(float(float(program.screen_width) * float(img_menu.height)) / float(img_menu.width)) ;
+    Rectangle source = { 0, 0, img_menu.width, img_menu.height };
+    Rectangle dest = { 0, 0, program.screen_width , program.screen_height };  // x, y, width, height
+    Vector2 origin = { 0, 0 } ;
 
     while(current_screen == GAME_MENU){
 
         BeginDrawing();
+        DrawTexturePro(img_menu , source , dest , origin , 0 ,  WHITE) ;
         ClearBackground(BLACK);
 
         Draw_Option(false);
@@ -30,13 +38,13 @@ void Menu::Run(shared_ptr<Game> game , Game_State& current_screen , int screen_w
         if(Draw_Left_Click(btn_continue, "Start", DARKGRAY, GRAY, WHITE)){
            //reading game 
            if(this->Is_File_Empty("last_save.txt")) {
-                this->set_new_game(game) ;
+                program.set_new_game() ;
            }
            else {
-                this->set_new_game(game) ;
-                Game_Save save ;
-                this->Func_Read_Data(save , "last_save.txt") ;
-                this->Set_Data_In_Game(save , "last_save.txt" , game) ;
+                program.set_new_game() ;
+                shared_ptr<Game_Save> save = make_shared<Game_Save>() ;
+                this->Func_Read_Data(*save , "last_save.txt") ;
+                this->Set_Data_In_Game(*save , "last_save.txt" , program) ;
            }
             current_screen = GAMEPLAY;
         }
@@ -50,7 +58,7 @@ void Menu::Run(shared_ptr<Game> game , Game_State& current_screen , int screen_w
             }
 
             current_screen = SAVE_LOAD_GAME;
-            Load_Screen(game , current_screen , screen_width , screen_height);
+            Load_Screen(program , current_screen , screen_width , screen_height);
         }
 
         if(Draw_Left_Click(btn_exit, "Exit", DARKGRAY, GRAY, WHITE)){
@@ -60,11 +68,12 @@ void Menu::Run(shared_ptr<Game> game , Game_State& current_screen , int screen_w
 
         EndDrawing();
     }
+    UnloadTexture(img_menu) ;
     return;
 }
 
 
-void Menu::Load_Screen(shared_ptr<Game> game , Game_State& current_screen , int screen_width , int screen_height){
+void Menu::Load_Screen(Program& program , Game_State& current_screen , int screen_width , int screen_height){
 
     while(current_screen != GAME_MENU){
 
@@ -77,9 +86,13 @@ void Menu::Load_Screen(shared_ptr<Game> game , Game_State& current_screen , int 
         float btn_X = (screen_width - btn_width) / 2 + 10;
         float start_Y = screen_height * 0.8f;
 
-        Rectangle btn_file1 = {btn_X, start_Y - 180, btn_width, btn_height };
-        Rectangle btn_file2     = {btn_X, start_Y - 60, btn_width, btn_height };
-        Rectangle btn_exit     = {btn_X, start_Y + 60, btn_width, btn_height };
+        Rectangle btn_file1 = {btn_X, start_Y - 540, btn_width, btn_height };
+        Rectangle btn_file2 = {btn_X, start_Y - 420, btn_width, btn_height };
+        Rectangle btn_file3 = {btn_X, start_Y - 300, btn_width, btn_height };
+        Rectangle btn_file4 = {btn_X, start_Y - 180, btn_width, btn_height };
+        Rectangle btn_file5 = {btn_X, start_Y - 60, btn_width, btn_height };
+        Rectangle btn_exit  = {btn_X, start_Y + 60, btn_width, btn_height };
+        shared_ptr<Game_Save> game_save ;
 
         /////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////
@@ -94,51 +107,121 @@ void Menu::Load_Screen(shared_ptr<Game> game , Game_State& current_screen , int 
             fstream clear("F2.txt", ios::out);
             clear.close();
         }
+        if(Draw_Right_Click_File(btn_file3, "F3.txt", DARKGRAY, GRAY, WHITE)){
+             
+            fstream clear("F3.txt", ios::out);
+            clear.close();
+        }
+        if(Draw_Right_Click_File(btn_file4, "F4.txt", DARKGRAY, GRAY, WHITE)){
+             
+            fstream clear("F4.txt", ios::out);
+            clear.close();
+        }
+        if(Draw_Right_Click_File(btn_file5, "F5.txt", DARKGRAY, GRAY, WHITE)){
+             
+            fstream clear("F5.txt", ios::out);
+            clear.close();
+        }
 
         /////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////
         if(Draw_ClickS_To_Save_File(btn_file1, "F1.txt", DARKGRAY, GRAY, WHITE)){
            
             if(!this->Is_File_Empty("last_save.txt")) {
-                this->set_new_game(game) ;
-                Game_Save game_save;
-                // this->Get_Data_In_Game(game_save , "last_save.txt" , game) ;
-                Func_Read_Data(game_save, "last_save.txt");
-                game_save.time_save = Get_Current_Time();
-                game_save.file_name = "F1.txt" ;
-                Func_Write_Data(game_save, "F1.txt");
+                program.set_new_game() ;
+                game_save = make_shared<Game_Save>() ;
+                Func_Read_Data(*game_save, "last_save.txt");
+                game_save->time_save = Get_Current_Time();
+                game_save->file_name = "F1.txt" ;
+                Func_Write_Data(*game_save, "F1.txt");
             }
         }
         if(Draw_ClickS_To_Save_File(btn_file2, "F2.txt", DARKGRAY, GRAY, WHITE)){
            
             if(!this->Is_File_Empty("last_save.txt")) {
-                this->set_new_game(game) ;
-                Game_Save game_save;
-                // this->Get_Data_In_Game(game_save , "last_save.txt" , game) ;
-                Func_Read_Data(game_save, "last_save.txt");
-                game_save.time_save = Get_Current_Time();
-                game_save.file_name = "F2.txt" ;
-                Func_Write_Data(game_save, "F2.txt");
+                program.set_new_game() ;
+                game_save = make_shared<Game_Save>() ;
+                Func_Read_Data(*game_save, "last_save.txt");
+                game_save->time_save = Get_Current_Time();
+                game_save->file_name = "F2.txt" ;
+                Func_Write_Data(*game_save, "F2.txt");
+            }
+        }
+        if(Draw_ClickS_To_Save_File(btn_file3, "F3.txt", DARKGRAY, GRAY, WHITE)){
+           
+            if(!this->Is_File_Empty("last_save.txt")) {
+                program.set_new_game() ;
+                game_save = make_shared<Game_Save>() ;
+                Func_Read_Data(*game_save, "last_save.txt");
+                game_save->time_save = Get_Current_Time();
+                game_save->file_name = "F3.txt" ;
+                Func_Write_Data(*game_save, "F3.txt");
+            }
+        }
+        if(Draw_ClickS_To_Save_File(btn_file4, "F4.txt", DARKGRAY, GRAY, WHITE)){
+           
+            if(!this->Is_File_Empty("last_save.txt")) {
+                program.set_new_game() ;
+                game_save = make_shared<Game_Save>() ;
+                Func_Read_Data(*game_save, "last_save.txt");
+                game_save->time_save = Get_Current_Time();
+                game_save->file_name = "F4.txt" ;
+                Func_Write_Data(*game_save, "F4.txt");
+            }
+        }
+        if(Draw_ClickS_To_Save_File(btn_file5, "F5.txt", DARKGRAY, GRAY, WHITE)){
+           
+            if(!this->Is_File_Empty("last_save.txt")) {
+                program.set_new_game() ;
+                game_save = make_shared<Game_Save>() ;
+                Func_Read_Data(*game_save, "last_save.txt");
+                game_save->time_save = Get_Current_Time();
+                game_save->file_name = "F5.txt" ;
+                Func_Write_Data(*game_save, "F5.txt");
             }
         }
         /////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////
         if(Draw_Left_Click_File(btn_file1, "F1.txt", DARKGRAY, GRAY, WHITE)){
             if(!this -> Is_File_Empty("F1.txt")) {
-                this->set_new_game(game) ;
-                Read_Save(game , "F1.txt");
+                program.set_new_game() ;
+                Read_Save(program , "F1.txt");
                 current_screen = GAME_MENU;
             }
         }
 
         if(Draw_Left_Click_File(btn_file2, "F2.txt", DARKGRAY, GRAY, WHITE)){
             if(!this -> Is_File_Empty("F2.txt")) {
-                this->set_new_game(game) ;
-                Read_Save(game , "F2.txt");
+                program.set_new_game() ;
+                Read_Save(program , "F2.txt");
                 current_screen = GAME_MENU;
             }
         }
 
+        if(Draw_Left_Click_File(btn_file3, "F3.txt", DARKGRAY, GRAY, WHITE)){
+            if(!this -> Is_File_Empty("F3.txt")) {
+                program.set_new_game() ;
+                Read_Save(program , "F3.txt");
+                current_screen = GAME_MENU;
+            }
+        }
+
+        if(Draw_Left_Click_File(btn_file4, "F4.txt", DARKGRAY, GRAY, WHITE)){
+            if(!this -> Is_File_Empty("F4.txt")) {
+                program.set_new_game() ;
+                Read_Save(program , "F4.txt");
+                current_screen = GAME_MENU;
+            }
+        }
+
+        if(Draw_Left_Click_File(btn_file5, "F5.txt", DARKGRAY, GRAY, WHITE)){
+            if(!this -> Is_File_Empty("F5.txt")) {
+                program.set_new_game() ;
+                Read_Save(program , "F5.txt");
+                current_screen = GAME_MENU;
+            }
+        }
+        
         if(Draw_Left_Click(btn_exit, "Back", DARKGRAY, GRAY, WHITE)){
 
             current_screen = GAME_MENU;
@@ -146,7 +229,7 @@ void Menu::Load_Screen(shared_ptr<Game> game , Game_State& current_screen , int 
         /////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////
         if(IsKeyDown(KEY_N)){
-            this->set_new_game(game) ;
+            // this->set_new_game(program.base_game) ;
             fstream clear("last_save.txt", ios::out);
             clear.close(); 
             current_screen = GAME_MENU;
@@ -156,7 +239,7 @@ void Menu::Load_Screen(shared_ptr<Game> game , Game_State& current_screen , int 
     return;
 }
 
-void Menu::Read_Save(shared_ptr<Game> game , string file_save_name){
+void Menu::Read_Save(Program& program , string file_save_name){
 
     Game_Save game_save;
     game_save.file_name = file_save_name;
@@ -164,26 +247,26 @@ void Menu::Read_Save(shared_ptr<Game> game , string file_save_name){
     Func_Write_Data(game_save, "last_save.txt");
 }
 
-void Menu::Set_Data_In_Game(Game_Save& game_save, const std::string& filename, shared_ptr<Game> game) {
+void Menu::Set_Data_In_Game(Game_Save& game_save, const std::string& filename, Program& program) {
     
-    game->Terror_level = stoi(game_save.Terror_level) ;
-    game->which_turn = stoi(game_save.which_turn) ;
-    game->remain_actions = stoi(game_save.remain_actions) ;
+    program.base_game->Terror_level = stoi(game_save.Terror_level) ;
+    program.base_game->which_turn = stoi(game_save.which_turn) ;
+    program.base_game->remain_actions = stoi(game_save.remain_actions) ;
 
-    game->set_dracula_place(game_save.dracula_place) ;
+    program.base_game->set_dracula_place(game_save.dracula_place) ;
     for(int i{} ; i < game_save.dracula_casket.size() ; ++i) { // dracula caskets
         if(game_save.dracula_casket[i].second == false) {
-            game->dracula.Destroy_Casket(game_save.dracula_casket[i].first) ;
+            program.base_game->dracula.Destroy_Casket(game_save.dracula_casket[i].first) ;
         }
     }
 
-    game->set_invisible_man_place(game_save.invisible_man_place) ;
+    program.base_game->set_invisible_man_place(game_save.invisible_man_place) ;
     for(int i{} ; i < game_save.invisible_man_investigate.size() ; ++i) { // investigates
         if(game_save.invisible_man_investigate[i].second == false) {
-            game->invisible_man.set_investigate_found(game_save.invisible_man_investigate[i].first) ;
+            program.base_game->invisible_man.set_investigate_found(game_save.invisible_man_investigate[i].first) ;
         }
     }
-    game->frenzy_monster = game_save.frenzy_monster ;
+    program.base_game->frenzy_monster = game_save.frenzy_monster ;
 
     shared_ptr<Hero> mayor = make_shared<Mayor>();
     shared_ptr<Hero> archaologist = make_shared<Archaologist>() ;
@@ -193,144 +276,144 @@ void Menu::Set_Data_In_Game(Game_Save& game_save, const std::string& filename, s
     //player 1 
 
     if(game_save.player_1_hero == mayor->get_name()) {
-        game->player_1.set_Player_Hero(mayor) ;
+        program.base_game->player_1.set_Player_Hero(mayor) ;
     }
 
     if(game_save.player_1_hero == archaologist->get_name()) {
-        game->player_1.set_Player_Hero(archaologist) ;
+        program.base_game->player_1.set_Player_Hero(archaologist) ;
     }
 
     if(game_save.player_1_hero == courier->get_name()) {
-        game->player_1.set_Player_Hero(courier) ;
+        program.base_game->player_1.set_Player_Hero(courier) ;
     }
 
     if(game_save.player_1_hero == scientist->get_name()) {
-        game->player_1.set_Player_Hero(scientist) ;
+        program.base_game->player_1.set_Player_Hero(scientist) ;
     }
 
-    game->player_1.set_Player_name(game_save.player_1_name) ;
-    game->player_1.get_Player_Hero()->set_player_name(game_save.player_1_name) ;
-    game->player_1.get_Player_Hero()->set_now_place(game_save.player_1_place) ;
+    program.base_game->player_1.set_Player_name(game_save.player_1_name) ;
+    program.base_game->player_1.get_Player_Hero()->set_player_name(game_save.player_1_name) ;
+    program.base_game->player_1.get_Player_Hero()->set_now_place(game_save.player_1_place) ;
 
     for(int i{} ; i < game_save.player_1_items.size() ; ++i) { // setting item for player 1
         for(int j{} ; j < game_save.player_1_items[i].second ; ++j) {
-                game->player_1.get_Player_Hero()->set_item(game->get_item(game_save.player_1_items[i].first)) ;
+                program.base_game->player_1.get_Player_Hero()->set_item(program.base_game->get_item(game_save.player_1_items[i].first)) ;
         }
     }
 
     for(int i{} ; i < game_save.player_1_perk_card.size() ; ++i) { // setting perk for player 1
-        game->player_1.get_Player_Hero()->set_perk(game->get_perk(game_save.player_1_perk_card[i])) ;
+        program.base_game->player_1.get_Player_Hero()->set_perk(program.base_game->get_perk(game_save.player_1_perk_card[i])) ;
     }
 
     //player 2
 
     if(game_save.player_2_hero == mayor->get_name()) {
-        game->player_2.set_Player_Hero(mayor) ;
+        program.base_game->player_2.set_Player_Hero(mayor) ;
     }
 
     if(game_save.player_2_hero == archaologist->get_name()) {
-        game->player_2.set_Player_Hero(archaologist) ;
+        program.base_game->player_2.set_Player_Hero(archaologist) ;
     }
 
     if(game_save.player_2_hero == courier->get_name()) {
-        game->player_2.set_Player_Hero(courier) ;
+        program.base_game->player_2.set_Player_Hero(courier) ;
     }
 
     if(game_save.player_2_hero == scientist->get_name()) {
-        game->player_2.set_Player_Hero(scientist) ;
+        program.base_game->player_2.set_Player_Hero(scientist) ;
     }
 
-    game->player_2.set_Player_name(game_save.player_2_name) ;
-    game->player_2.get_Player_Hero()->set_player_name(game_save.player_2_name) ;
-    game->player_2.get_Player_Hero()->set_now_place(game_save.player_2_place) ;
+    program.base_game->player_2.set_Player_name(game_save.player_2_name) ;
+    program.base_game->player_2.get_Player_Hero()->set_player_name(game_save.player_2_name) ;
+    program.base_game->player_2.get_Player_Hero()->set_now_place(game_save.player_2_place) ;
 
     for(int i{} ; i < game_save.player_2_items.size() ; ++i) { // setting item for player 2
         for(int j{} ; j < game_save.player_2_items[i].second ; ++j) {
-                game->player_2.get_Player_Hero()->set_item(game->get_item(game_save.player_2_items[i].first)) ;
+                program.base_game->player_2.get_Player_Hero()->set_item(program.base_game->get_item(game_save.player_2_items[i].first)) ;
         }
     }
 
     for(int i{} ; i < game_save.player_2_perk_card.size() ; ++i) { // setting perk for player 2
-        game->player_2.get_Player_Hero()->set_perk(game->get_perk(game_save.player_2_perk_card[i])) ;
+        program.base_game->player_2.get_Player_Hero()->set_perk(program.base_game->get_perk(game_save.player_2_perk_card[i])) ;
     }
 
     // setting items in map first 
     for(int i{} ; i < game_save.item_in_map.size() ; ++i) {
         for(int j{} ; j < game_save.item_in_map[i].second ; ++j) {
-            game->set_item_to_map(game->get_item(game_save.item_in_map[i].first)) ;
+            program.base_game->set_item_to_map(program.base_game->get_item(game_save.item_in_map[i].first)) ;
         }
     }
     // setting item in bag 
-    game->remove_not_exist_items_in_save(game_save.item_in_bag) ;
+    program.base_game->remove_not_exist_items_in_save(game_save.item_in_bag) ;
 
     // setting villagers in map first 
     for(int i{} ; i < game_save.villager_in_map.size() ; ++i) {
 
-        game->Game_map.set_villager(game_save.villager_in_map[i].second , game->get_villager(game_save.villager_in_map[i].first)) ;
+        program.base_game->Game_map.set_villager(game_save.villager_in_map[i].second , program.base_game->get_villager(game_save.villager_in_map[i].first)) ;
     }
 
     // setting villagers in game bag
-    game->remove_not_exist_villagers_in_save(game_save.villager_in_bag) ;
+    program.base_game->remove_not_exist_villagers_in_save(game_save.villager_in_bag) ;
 
     // setting perk cards 
-    game->remove_not_exist_perk_cards_in_save(game_save.perk_card_remain_in_bag) ;
+    program.base_game->remove_not_exist_perk_cards_in_save(game_save.perk_card_remain_in_bag) ;
 
     // setting monster cards 
-    game->remove_not_exist_monster_cards_in_save(game_save.monster_card_remain_in_bag) ;
+    program.base_game->remove_not_exist_monster_cards_in_save(game_save.monster_card_remain_in_bag) ;
 
 
 }
 
-void Menu::Get_Data_In_Game(Game_Save& game_save, const std::string& filename, shared_ptr<Game> game) {
+void Menu::Get_Data_In_Game(Game_Save& game_save, const std::string& filename, Program& program) {
     game_save.file_name = filename ;
     game_save.time_save = this -> Get_Current_Time() ;
 
-    game_save.Terror_level = to_string(game->Terror_level) ;
-    game_save.which_turn = to_string(game->which_turn) ;
-    game_save.remain_actions = to_string(game->remain_actions) ;
+    game_save.Terror_level = to_string(program.base_game->Terror_level) ;
+    game_save.which_turn = to_string(program.base_game->which_turn) ;
+    game_save.remain_actions = to_string(program.base_game->remain_actions) ;
 
-    game_save.dracula_place = game->get_dracula_place() ;
+    game_save.dracula_place = program.base_game->get_dracula_place() ;
 
-    game_save.dracula_casket = game->dracula.get_casket_for_save() ;
+    game_save.dracula_casket = program.base_game->dracula.get_casket_for_save() ;
 
-    game_save.invisible_man_place = game->get_invisible_man_place() ;
-    game_save.invisible_man_investigate = game->invisible_man.get_investigate_for_save() ;
+    game_save.invisible_man_place = program.base_game->get_invisible_man_place() ;
+    game_save.invisible_man_investigate = program.base_game->invisible_man.get_investigate_for_save() ;
 
-    game_save.frenzy_monster = game->frenzy_monster ;
+    game_save.frenzy_monster = program.base_game->frenzy_monster ;
 
-    game_save.player_1_hero = game->player_1.get_Player_Hero()->get_name() ;
-    game_save.player_1_name = game->player_1.get_Player_Hero()->get_player_name() ;
-    game_save.player_1_place = game->player_1.get_Player_Hero()->get_now_place() ;
+    game_save.player_1_hero = program.base_game->player_1.get_Player_Hero()->get_name() ;
+    game_save.player_1_name = program.base_game->player_1.get_Player_Hero()->get_player_name() ;
+    game_save.player_1_place = program.base_game->player_1.get_Player_Hero()->get_now_place() ;
 
-    game_save.player_1_items = game->player_1.get_Player_Hero() -> get_items_for_save() ;
-    game_save.player_1_perk_card = game->player_1.get_Player_Hero() -> get_perk_for_save() ;
+    game_save.player_1_items = program.base_game->player_1.get_Player_Hero() -> get_items_for_save() ;
+    game_save.player_1_perk_card = program.base_game->player_1.get_Player_Hero() -> get_perk_for_save() ;
 
-    game_save.player_2_hero = game->player_2.get_Player_Hero()->get_name() ;
-    game_save.player_2_name = game->player_2.get_Player_Hero()->get_player_name() ;
-    game_save.player_2_place = game->player_2.get_Player_Hero()->get_now_place() ;
+    game_save.player_2_hero = program.base_game->player_2.get_Player_Hero()->get_name() ;
+    game_save.player_2_name = program.base_game->player_2.get_Player_Hero()->get_player_name() ;
+    game_save.player_2_place = program.base_game->player_2.get_Player_Hero()->get_now_place() ;
 
-    game_save.player_2_items = game->player_2.get_Player_Hero() -> get_items_for_save() ;
-    game_save.player_2_perk_card = game->player_2.get_Player_Hero() -> get_perk_for_save() ;
+    game_save.player_2_items = program.base_game->player_2.get_Player_Hero() -> get_items_for_save() ;
+    game_save.player_2_perk_card = program.base_game->player_2.get_Player_Hero() -> get_perk_for_save() ;
 
-    for(int i{} ; i < game->item_bag.size() ; ++i) {
-        game_save.item_in_bag.push_back(game->item_bag[i].get_name()) ;
+    for(int i{} ; i < program.base_game->item_bag.size() ; ++i) {
+        game_save.item_in_bag.push_back(program.base_game->item_bag[i].get_name()) ;
     }
 
-    game_save.item_in_map = game->Game_map.get_all_items() ;
+    game_save.item_in_map = program.base_game->Game_map.get_all_items() ;
 
-    for(int i{} ; i < game->villagers_bag.size() ; ++i) {
-        game_save.villager_in_bag.push_back(game->villagers_bag[i].get_name()) ;
+    for(int i{} ; i < program.base_game->villagers_bag.size() ; ++i) {
+        game_save.villager_in_bag.push_back(program.base_game->villagers_bag[i].get_name()) ;
     }
 
-    game_save.villager_in_map = game->Game_map.get_all_villager_for_save() ;
+    game_save.villager_in_map = program.base_game->Game_map.get_all_villager_for_save() ;
 
-    for(int i{} ; i < game->perk_bag.size() ; ++i) {
-        game_save.perk_card_remain_in_bag.push_back(game->perk_bag[i]->get_perk_name()) ;
-        cout<< "\n\n" << game->perk_bag[i]->get_perk_name() << "\n\n" ;
+    for(int i{} ; i < program.base_game->perk_bag.size() ; ++i) {
+        game_save.perk_card_remain_in_bag.push_back(program.base_game->perk_bag[i]->get_perk_name()) ;
+        cout<< "\n\n" << program.base_game->perk_bag[i]->get_perk_name() << "\n\n" ;
     }
 
-    for(int i{} ; i < game->Monster_cards_bag.size() ; ++i) {
-        game_save.monster_card_remain_in_bag.push_back(game->Monster_cards_bag[i]->get_name()) ;
+    for(int i{} ; i < program.base_game->Monster_cards_bag.size() ; ++i) {
+        game_save.monster_card_remain_in_bag.push_back(program.base_game->Monster_cards_bag[i]->get_name()) ;
     }
 }
 
@@ -494,13 +577,14 @@ void Menu::Func_Read_Data(Game_Save& game_save, const string& filename){
     }
     start = "" ;
 
-    name = "" ; place = "" ;
+    name = "" ; place = "" ; int counterr = 0 ;
     while(read >> name) { // getting villager in map
         if(name == "#") { 
             break ;
         }
         read >> place ;
         game_save.villager_in_map.push_back({name , place}) ;
+        cout<< "\n" << name << "  " << ++   counterr << "  " << place << "\n" ;
     }
 
     read >> start ;
@@ -691,7 +775,7 @@ void Menu::Draw_Option(bool draw){
 
         DrawText("Click mouse right_click to delete select file_save.", text_x, text_y + 30, 20,text_color);
         DrawText("Click Key_S to save now game on select file.", text_x, text_y + 60, 20,text_color);
-        DrawText("Click Key_N to start s new game->", text_x, text_y + 90, 20,text_color);
+        DrawText("Click Key_N to start s new program.base_game->", text_x, text_y + 90, 20,text_color);
     }
 }
 
@@ -731,6 +815,3 @@ string Menu::Get_Current_Time(){
     return std::string(buffer);
 }
 
-void Menu::set_new_game(shared_ptr<Game>game) {
-    game = make_shared<Game>() ;
-}

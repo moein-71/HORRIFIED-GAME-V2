@@ -25,7 +25,7 @@ void Form_of_The_bat::ability(Game& gamestage) {
     //Event 
 
     if(gamestage.get_dracula_place() != "DEAD"){
-        string dracula_new_place = gamestage.get_last_hero_turn() == gamestage.get_player_1_hero_name() ? gamestage.get_player_1_hero_name() : gamestage.get_player_2_hero_name() ;
+        string dracula_new_place = gamestage.get_last_hero_turn() == gamestage.get_player_1_hero_name() ? gamestage.get_player_1_place() : gamestage.get_player_2_place() ;
         gamestage.set_dracula_place(dracula_new_place) ;
     }
 

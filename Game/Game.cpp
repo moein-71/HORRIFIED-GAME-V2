@@ -336,6 +336,7 @@ Villager Game::get_villager(string name) {
     for( Villager villager : villagers_bag) {
         if(villager.get_name() == name) {
             villagers_bag.erase( villagers_bag.begin() + counter) ;
+            villagers_bag.shrink_to_fit() ;
             return villager ;
         }
         ++counter ;
@@ -354,8 +355,8 @@ void Game::remove_not_exist_villagers_in_save(std::vector<std::string> exist_vil
 
             if(exist_villagers[i] == this -> villagers_bag[j].get_name()) {
                 new_villagers.push_back(villagers_bag[j]) ;
-                // this->villagers_bag.erase(this->villagers_bag.begin() + j) ;
-                // this->villagers_bag.shrink_to_fit() ;
+                this->villagers_bag.erase(this->villagers_bag.begin() + j) ;
+                this->villagers_bag.shrink_to_fit() ;
             }
         }
     }
@@ -481,6 +482,7 @@ void Game::set_villager_in_Game_map(const std::string place , const std::string 
         if(temp.get_name() == name) {
             this -> Game_map.set_villager(place , temp) ;
             this -> villagers_bag.erase(villagers_bag.begin() + counter) ;
+            villagers_bag.shrink_to_fit() ;
             return ;
         }
         ++counter ;
