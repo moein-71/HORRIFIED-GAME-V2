@@ -51,11 +51,10 @@ void Program::Start() {
     for(int i{} ; i < 12 ; ++i) {
         base_game->set_item_to_map(base_game->get_random_item()) ;
     }
-        cout<< "\n\n\nmoz\n\n\n" ;
 
     Texture2D img_start = LoadTexture("../Asset/Start.jpg") ;
-    float img_start_height = float(float(float(this->screen_width) * float(img_start.height)) / float(img_start.width)) ;
-    Rectangle source = { 0, 0, img_start.width, img_start.height };
+    float img_start_height = ((this->screen_width * img_start.height) / img_start.width) ;
+    Rectangle source = { 0, 0, float(img_start.width), float(img_start.height) };
     Rectangle dest = { 0, 0, this->screen_width , this->screen_height };  // x, y, width, height
     Vector2 origin = { 0, 0 } ;
 
@@ -226,6 +225,9 @@ void Program::Start() {
     const int distance_between = 100;
 
     vector<string> class_names = {mayor -> get_name(), archaologist -> get_name(), courier -> get_name(), scientist -> get_name()};
+    // vector<string> class_names = {"../Asset/icon/mayor.png", "../Asset/icon/archaologist.png", "../Asset/icon/courier.png","../Asset/icon/scientist.png" };
+    vector<Texture2D> class_texture = {LoadTexture("../Asset/icon/mayor.png") , LoadTexture("../Asset/icon/archaologist.png") , LoadTexture("../Asset/icon/courier.png") , LoadTexture("../Asset/icon/scientist.png")} ;
+    
     vector<Rectangle> class_boxes;
     int selected_class = -1;
 
@@ -267,7 +269,7 @@ void Program::Start() {
         DrawTexturePro(img_start , source , dest , origin , 0 ,  WHITE) ;        
         ClearBackground(BLACK);
 
-        DrawText(TextFormat(base_game->player_1.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, WHITE) ;
+        DrawText(TextFormat(base_game->player_1.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, BLUE) ;
 
         if (selected_class != -1) {//thanks form python because learn us %s in cpp , but i like f""
             DrawText(TextFormat("You want to selected: %s", class_names[selected_class].c_str()), start_point_X / 3, start_point_Y / 2, 40, WHITE);
@@ -303,13 +305,17 @@ void Program::Start() {
             DrawRectangleLinesEx(class_boxes[i], 3, DARKGRAY);
 
             int text_width = MeasureText(class_names[i].c_str(), 30);
-            DrawText(
-                class_names[i].c_str(),
-                class_boxes[i].x + (box_size - text_width) / 2,
-                class_boxes[i].y + box_size / 2 - 15,
-                30,
-                WHITE
-            );
+            Rectangle source = { 0, 0, float(class_texture[i].width), float(class_texture[i].height) };
+            Rectangle dest = { class_boxes[i].x, class_boxes[i].y, class_boxes[i].width  , class_boxes[i].height };  // x, y, width, height
+            Vector2 origin = { 0, 0 } ;
+            DrawTexturePro(class_texture[i] , source , dest , origin , 0 , WHITE) ;
+            // DrawText(
+            //     class_names[i].c_str(),
+            //     class_boxes[i].x + (box_size - text_width) / 2,
+            //     class_boxes[i].y + box_size / 2 - 15,
+            //     30,
+            //     WHITE
+            // );
         }
 
         EndDrawing();
@@ -338,7 +344,7 @@ void Program::Start() {
         DrawTexturePro(img_start , source , dest , origin , 0 ,  WHITE) ;       
         ClearBackground(BLACK);
 
-        DrawText(TextFormat(base_game->player_2.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, WHITE) ;
+        DrawText(TextFormat(base_game->player_2.get_Player_name().c_str()) , start_point_X / 3, start_point_Y / 5, 60, RED) ;
 
         if (selected_class != -1) {
             DrawText(TextFormat("You want to selected: %s", class_names[selected_class].c_str()), start_point_X / 3, start_point_Y / 2, 40, WHITE);
@@ -377,14 +383,19 @@ void Program::Start() {
             DrawRectangleRec(class_boxes[i], box_color);
             DrawRectangleLinesEx(class_boxes[i], 3, DARKGRAY);
 
+            if(class_names[i] == "Selected") continue; 
             int text_width = MeasureText(class_names[i].c_str(), 30);
-            DrawText(
-                class_names[i].c_str(),
-                class_boxes[i].x + (box_size - text_width) / 2,
-                class_boxes[i].y + box_size / 2 - 15,
-                30,
-                WHITE
-            );
+            Rectangle source = { 0, 0, float(class_texture[i].width), float(class_texture[i].height) };
+            Rectangle dest = { class_boxes[i].x, class_boxes[i].y, class_boxes[i].width  , class_boxes[i].height };  // x, y, width, height
+            Vector2 origin = { 0, 0 } ;
+            DrawTexturePro(class_texture[i] , source , dest , origin , 0 , WHITE) ;
+            // DrawText(
+            //     class_names[i].c_str(),
+            //     class_boxes[i].x + (box_size - text_width) / 2,
+            //     class_boxes[i].y + box_size / 2 - 15,
+            //     30,
+            //     WHITE
+            // );
         }
 
         EndDrawing();
@@ -396,8 +407,9 @@ void Program::Start() {
     }
 
     UnloadTexture(img_start) ;
-
-    cout<< "\n\n\nmoz\n\n\n" ;
+    for(int i{} ; i < class_texture.size() ; ++i) {
+        UnloadTexture(class_texture[i]) ;
+    }
 
 }
 

@@ -10,11 +10,12 @@
 
 using namespace std;
 
+
 void Menu::Run(Program& program , Game_State& current_screen , int screen_width , int screen_height){
 
     Texture2D img_menu = LoadTexture("../Asset/Menu.jpg") ;
-    float img_start_height = float(float(float(program.screen_width) * float(img_menu.height)) / float(img_menu.width)) ;
-    Rectangle source = { 0, 0, img_menu.width, img_menu.height };
+    int img_start_height = ((program.screen_width * img_menu.height) / img_menu.width) ;
+    Rectangle source = { 0, 0, float(img_menu.width), float(img_menu.height) };
     Rectangle dest = { 0, 0, program.screen_width , program.screen_height };  // x, y, width, height
     Vector2 origin = { 0, 0 } ;
 
@@ -75,9 +76,16 @@ void Menu::Run(Program& program , Game_State& current_screen , int screen_width 
 
 void Menu::Load_Screen(Program& program , Game_State& current_screen , int screen_width , int screen_height){
 
+    Texture2D img_save = LoadTexture("../Asset/Save.jpg") ;
+    int img_start_height = ((program.screen_width * img_save.height) / img_save.width) ;
+    Rectangle source = { 0, 0, float(img_save.width), float(img_save.height) };
+    Rectangle dest = { 0, 0, program.screen_width , program.screen_height };  // x, y, width, height
+    Vector2 origin = { 0, 0 } ;
+
     while(current_screen != GAME_MENU){
 
         BeginDrawing();
+        DrawTexturePro(img_save , source , dest , origin , 0 ,  WHITE) ;
         ClearBackground(BLACK);
         Draw_Option(true);
 
@@ -236,6 +244,7 @@ void Menu::Load_Screen(Program& program , Game_State& current_screen , int scree
         }
         EndDrawing();
     }
+    UnloadTexture(img_save) ;
     return;
 }
 
@@ -409,7 +418,6 @@ void Menu::Get_Data_In_Game(Game_Save& game_save, const std::string& filename, P
 
     for(int i{} ; i < program.base_game->perk_bag.size() ; ++i) {
         game_save.perk_card_remain_in_bag.push_back(program.base_game->perk_bag[i]->get_perk_name()) ;
-        cout<< "\n\n" << program.base_game->perk_bag[i]->get_perk_name() << "\n\n" ;
     }
 
     for(int i{} ; i < program.base_game->Monster_cards_bag.size() ; ++i) {
@@ -584,7 +592,6 @@ void Menu::Func_Read_Data(Game_Save& game_save, const string& filename){
         }
         read >> place ;
         game_save.villager_in_map.push_back({name , place}) ;
-        cout<< "\n" << name << "  " << ++   counterr << "  " << place << "\n" ;
     }
 
     read >> start ;
@@ -769,13 +776,13 @@ void Menu::Draw_Option(bool draw){
 
     Color text_color = WHITE;
 
-    DrawText("Click mouse Left_click to select.", text_x, text_y, 20,text_color);
+    DrawText("Click mouse Left_click to select.", text_x, text_y, 30,text_color);
 
     if(draw){
 
-        DrawText("Click mouse right_click to delete select file_save.", text_x, text_y + 30, 20,text_color);
-        DrawText("Click Key_S to save now game on select file.", text_x, text_y + 60, 20,text_color);
-        DrawText("Click Key_N to start s new program.base_game->", text_x, text_y + 90, 20,text_color);
+        DrawText("Click mouse right_click to delete select file_save.", text_x, text_y + 40, 30,text_color);
+        DrawText("Click Key_S to save now game on select file.", text_x, text_y + 80, 30,text_color);
+        DrawText("Click Key_N to start s new program.base_game->", text_x, text_y + 120, 30,text_color);
     }
 }
 
